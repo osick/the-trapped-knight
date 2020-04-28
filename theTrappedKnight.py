@@ -10,10 +10,12 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import random
+import sys
 
 plt.rcParams['animation.convert_path'] = r'd:\bin\imagemagick\magick.exe'
+plt.rcParams['animation.ffmpeg_path']  = r'd:\bin\ffmpeg-20200426-1128aa8-win64-static\bin\ffmpeg.exe'
 
-from matplotlib.animation import FuncAnimation, ImageMagickFileWriter
+from matplotlib.animation import FuncAnimation, ImageMagickFileWriter, FFMpegFileWriter
 
 history = []
 Xs      = []
@@ -95,12 +97,18 @@ if __name__=="__main__":
     ron     = knight(test.environment,shape,size=size)
     history = [[size[0],size[1],True]]
     
-    #fig,ax=plt.subplots()
-    #ax.set_xlim(0,2*size[0])
-    #ax.set_ylim(0,2*size[1])
+    fig,ax=plt.subplots()
+    ax.set_xlim(0,2*size[0])
+    ax.set_ylim(0,2*size[1])
 
-    #knightAnimation=FuncAnimation(fig,genLine)
-    #plt.show()
-    #writer=ImageMagickFileWriter()
-    #knightAnimation.save('knight.gif', writer="imagemagick", fps=60)
+    knightAnimation=FuncAnimation(fig,genLine)
+    if len(sys.argv)>1: 
+        if sys.argv[1]=="show":
+            plt.show()
+        elif sys.argv[1]=="video": 
+            writer=FFMpegFileWriter()
+            knightAnimation.save('knight.mp4', writer=writer, fps=60)            
+        elif sys.argv[1]=="gif": 
+            writer=ImageMagickFileWriter()
+            knightAnimation.save('knight.gif', writer=writer, fps=60)
     
