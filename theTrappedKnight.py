@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import sys
+import os
 
 from matplotlib.animation import FuncAnimation, ImageMagickFileWriter, FFMpegFileWriter, writers
 Xs      = []
@@ -81,7 +82,10 @@ def genLine(i,speed, color="random"):
             
 
 def anim(kn, speed, type="show", color="random"):
-    fname="knight-{}-{}".format(kn.shape[0],kn.shape[1])
+    directory="out"
+    if not os.path.exists(directory): os.mkdir(directory) 
+    fname=os.path.join(directory,"knight-{}-{}".format(kn.shape[0],kn.shape[1]))
+    
     knightAnimation=FuncAnimation(fig,genLine, fargs=(speed, color), repeat=False, frames=range(2,len(kn.history),speed,),blit=False, interval=10, cache_frame_data=False)
     if   type=="show":  plt.show()
     elif type=="video": knightAnimation.save(fname+".avi", writer=FFMpegFileWriter(fps=speed, bitrate=100000, extra_args=['-vcodec', 'libx264']),)
