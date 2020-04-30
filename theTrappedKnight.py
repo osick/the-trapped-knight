@@ -3,126 +3,136 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.ticker as mticker
+plt.rcParams['animation.convert_path'] = r'magick'
 import random
 import sys
 import os
+from matplotlib.animation import FuncAnimation, ImageMagickFileWriter, FFMpegFileWriter
 
-from matplotlib.animation import FuncAnimation, ImageMagickFileWriter, FFMpegFileWriter, writers
-Xs      = []
-Ys      = []
-
-class board:
+class spiralBoard:
     directions={"e":[0,-1,"n",1,0],"n":[-1,0,"w",0,-1],"w":[0,1,"s",-1,0],"s":[1,0,"e",0,1]}
 
-    def __init__(self, direction, size=[50,50]):        
+    def __init__(self, size=[400,400]):     
         self.squares = np.zeros((2*size[0]+1, 2*size[1]+1))
-        self.direction = direction
-        self.x = size[0]
+        self.direction = "e"
+        self.x = size[0] 
         self.y = size[1]
         self.count = 1
         self.squares[self.x][self.y] = 1 
         self.count += 1 
         self.x += 1
         self._initSq(4*size[0]*size[1])
-
+    
+    # PRIVATE METHODS
     def _initSq(self, loops):       
         for _ in range(loops):
             self.squares[self.x][self.y] = self.count
             self.count += 1 
-            if self.squares[self.x + board.directions[self.direction][0]][self.y+board.directions[self.direction][1]]==0:
-                self.x += board.directions[self.direction][0]
-                self.y += board.directions[self.direction][1]
-                self.direction = board.directions[self.direction][2]
+            if self.squares[self.x + spiralBoard.directions[self.direction][0]][self.y+spiralBoard.directions[self.direction][1]]==0:
+                self.x += spiralBoard.directions[self.direction][0]
+                self.y += spiralBoard.directions[self.direction][1]
+                self.direction = spiralBoard.directions[self.direction][2]
             else:
-                self.x += board.directions[self.direction][3]
-                self.y += board.directions[self.direction][4]
+                self.x += spiralBoard.directions[self.direction][3]
+                self.y += spiralBoard.directions[self.direction][4]
 
-class knight:
+class knightPathFinder:
         
-    def __init__(self, squares, steps=[1,2], size=[50,50]):        
+    def __init__(self, squares, steps=[1,2]):        
         self.squares = squares
         self.shape=steps
         self.movetypes=[[steps[0],-steps[1]],[steps[1],-steps[0]],[steps[1], steps[0]],[steps[0],steps[1]],[-steps[0],steps[1]],[-steps[1],steps[0]],[-steps[1],-steps[0]],[-steps[0],-steps[1]]]
-        self.x = size[0]
-        self.y = size[1]
-        self.maxsize=4*size[0]*size[1]
+        self.x = (self.squares.shape[0]-1)//2
+        self.y = (self.squares.shape[1]-1)//2
+        self.maxsize=self.squares.shape[0]*self.squares.shape[1]
 
-    def nextMove(self):
+    # PUBLIC METHODS
+    def genHistory(self):
+        self.history=[]
+        self.history.append(self._nextMove())
+        while self.history[-1][2] and len(self.history)<self.maxsize: 
+            self.history.append(self._nextMove())
+        self.xMin=min([s[0]  for s in self.history])
+        self.yMin=min([s[1]  for s in self.history])
+        self.xMax=max([s[0]  for s in self.history])
+        self.yMax=max([s[1]  for s in self.history])
+        self.dimMax=max(self.xMax,self.yMax)
+        self.dimMin=max(self.xMin,self.yMin)
+        print("Knight path of shape ("+str(self.shape[0])+","+str(self.shape[1])+"): length =", len(kn.history))
+
+    # PRIVATE METHODS
+    def _nextMove(self):
         allMoves = [self.squares[self.x + mt[0]][self.y + mt[1]] for mt in self.movetypes]
         self.squares[self.x][self.y] += self.maxsize
         self.x+=self.movetypes[allMoves.index(min(allMoves))][0]
         self.y+=self.movetypes[allMoves.index(min(allMoves))][1]
         return [self.x,self.y, (min(allMoves) <= self.maxsize)]
 
+class pathAnimation:
 
-    def genHistory(self):
-        global Xs, Ys
-        self.history=[]
-        self.history.append(self.nextMove())
-        while self.history[-1][2] and len(self.history)<self.maxsize: 
-            self.history.append(self.nextMove())
-        for step in self.history:
-            Xs.append(step[0])
-            Ys.append(step[1])
-        self.xMin=min(Xs)
-        self.xMax=max(Xs)
-        self.yMin=min(Ys)
-        self.yMax=max(Ys)
-        self.dimMax=max(self.xMax,self.yMax)
-        self.dimMin=max(self.xMin,self.yMin)
+    def __init__(self, kn):
+        self.Xs=[]
+        self.Ys=[]
+        self.kn=kn
+        for step in kn.history:
+            self.Xs.append(step[0])
+            self.Ys.append(step[1])    
+        self.fig, self.ax = self._initPlot()
 
-def genLine(i,speed, color="random"):
-    global Xs, Ys
-    if color=="random": c=np.random.rand(3,)
-    else: c=color
-    for j in range(speed):
-        if i+j<=len(Xs): 
-            ax.plot(Xs[i-2+j:i+j], Ys[i-2+j:i+j], color=c, lw=1)
-            ax.set_title('({},{})-Knight\n(Generation {} of {})\n'.format(knightGeom[0],knightGeom[1],min(len(kn.history),i+speed),len(kn.history)))
-            
+    # PUBLIC METHODS
+    def animate(self, outputType="show", color="random", speed=10, outDir="out"): 
+        if not os.path.exists(outDir): os.mkdir(outDir) 
+        fname=os.path.join(outDir,"knightPath-{}-{}".format(self.kn.shape[0],self.kn.shape[1]))
+        knightAnimation=FuncAnimation(self.fig,self._genLine, fargs=(speed, color), repeat=False ,frames=range(-speed,len(self.kn.history),speed,) ,blit=False ,interval=10, cache_frame_data=False)
+        if   outputType == "screen":  plt.show()
+        elif outputType == "avi":     knightAnimation.save(fname+".avi", writer=FFMpegFileWriter(fps=1, bitrate=100000, extra_args=['-vcodec', 'libx264']),)
+        elif outputType == "mp4":     knightAnimation.save(fname+".mp4", writer=FFMpegFileWriter(fps=1, bitrate=100000, extra_args=['-vcodec', 'libx264']),)
+        elif outputType == "gif":     knightAnimation.save(fname+'.gif', writer=ImageMagickFileWriter(fps=1))
+        elif outputType == "html":    open(fname+".html", "w").write(self._genHtmlFrame(knightAnimation.to_html5_video(50.0))) 
+        else: sys.exit("Unknown outputType '"+outputType+"': sys.exit()")
 
-def anim(kn, speed, type="show", color="random"):
-    directory="out"
-    if not os.path.exists(directory): os.mkdir(directory) 
-    fname=os.path.join(directory,"knight-{}-{}".format(kn.shape[0],kn.shape[1]))
+    # PRIVATE METHODS
+    def _initPlot(self):
+        fig,ax=plt.subplots(figsize=(8,8))
+        #fig.patch.set_facecolor('black')
+        ax.set_facecolor('black')
+        ax.set_xlim(self.kn.dimMin - 5 , self.kn.dimMax + 5)
+        ax.set_ylim(self.kn.dimMin - 5 , self.kn.dimMax + 5)
+        ax.xaxis.set_major_formatter(mticker.FuncFormatter(self._update_xticks))
+        ax.yaxis.set_major_formatter(mticker.FuncFormatter(self._update_yticks))
+        ax.set_title('(Generation {} of {})\n'.format(0,len(self.kn.history)), fontsize=14, color="black")
+        return fig, ax
+
+    def _update_xticks(self,x, pos): 
+        return str(int(x-self.Xs[0]))
     
-    knightAnimation=FuncAnimation(fig,genLine, fargs=(speed, color), repeat=False, frames=range(2,len(kn.history),speed,),blit=False, interval=10, cache_frame_data=False)
-    if   type=="show":  plt.show()
-    elif type=="video": knightAnimation.save(fname+".avi", writer=FFMpegFileWriter(fps=speed, bitrate=100000, extra_args=['-vcodec', 'libx264']),)
-    elif type=="gif":   knightAnimation.save(fname+'.gif', writer=ImageMagickFileWriter(fps=5))
-    elif type=="html":  open(fname+".html", "w").write(knightAnimation.to_html5_video())
+    def _update_yticks(self,x, pos): 
+        return str(int(x-self.Ys[0]))
 
-def initPlot(kn):
-    fig,ax=plt.subplots(figsize=(8,8))
-    fig.patch.set_facecolor('black')
-    ax.set_facecolor('black')
-    ax.spines['bottom'].set_color('white')
-    ax.spines['top'].set_color('white') 
-    ax.spines['right'].set_color('white')
-    ax.spines['left'].set_color('white')
-    ax.set_xlim( kn.dimMin-10, kn.dimMax+10)
-    ax.set_ylim( kn.dimMin-10 ,kn.dimMax+10)
-    ax.xaxis.label.set_color('white')
-    ax.set_xlabel('step 0',)
-    plt.gca().axes.get_xaxis().set_visible(False)
-    plt.gca().axes.get_yaxis().set_visible(False)
-    ax.set_title('({},{})-Knight\nGeneration {} of {})\n'.format(knightGeom[0],knightGeom[1],0,len(kn.history)), fontsize=14, color="white", fontweight='bold')
-    return fig, ax
+    def _genLine(self,i,speed,color):
+        if i<0:return
+        c=np.random.rand(3,) if color=="random" else color
+        self.ax.set_title('(Generation {} of {})\n'.format(min(len(kn.history),i+speed),len(kn.history)))
+        for j in range(speed):
+            if i+j<=len(self.Xs) and i-2+j>=0: 
+                self.ax.plot(self.Xs[i-2+j:i+j], self.Ys[i-2+j:i+j], color=c, lw=1, alpha=0.5)
+        
+    def _genHtmlFrame(self,mainBody):
+        header='<html><body style="background-color:black;color:white;text-align:center;margin:0;padding:0;border:0">'
+        header+='<h1> <br/>THE TRAPPED ({}-{})-KNIGHT</h1>'.format(self.kn.shape[0],self.kn.shape[1])
+        header+='<div style="border-top: 4px solid red;width:100%">'
+        header+='<div style="display: table;margin: 0 auto;border:3px solid white;">'
+        footer='</div></div><p>Page generated by <a href="https://github.com/osick/the-trapped-knight">theTrappedKnight.py</a></p></body></html>'
+        return header+mainBody+footer
 
 if __name__=="__main__":
 
-    if len(sys.argv)!=4: 
-        sys.exit("Usage:\nPython "+__file__+" <number> <number> [show|video|gif|html]")
-    knightGeom=[int(sys.argv[1]),int(sys.argv[2])]
-    type=sys.argv[3]
-
-    dim=400
-    speed=200
-    boardGeom=[dim,dim]
-
-    sp  = board(direction='e',  size=[dim,dim])
-    kn  = knight(sp.squares, knightGeom, size=boardGeom)
+    if len(sys.argv)!=4: sys.exit("Usage:\nPython "+__file__+" <number> <number> [screen|mp4|avi|gif|html]")
+    
+    sb  = spiralBoard()
+    kn  = knightPathFinder(sb.squares, [int(sys.argv[1]),int(sys.argv[2])])
     kn.genHistory()
-    print("knight of shape ("+str(knightGeom[0])+","+str(knightGeom[1])+"): length =", len(kn.history))
-    fig, ax = initPlot(kn)
-    anim(kn, 10, type, "white")
+    
+    pa  = pathAnimation(kn)
+    pa.animate(outputType=sys.argv[3], color="random", speed=50, outDir="out")
