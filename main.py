@@ -20,7 +20,7 @@ def main(xRange,yRange,outputType,pathType,color="white"):
     """
     for x in xRange:
         for y in yRange:  
-            if gcd(x,y)>1:continue  
+            if gcd(x,y)>1 or max(x,y)==1:continue  
             sb  = spiralBoard()
             kn  = knightPathFinder(sb.squares, [x,y])
             kn.genHistory()
@@ -37,9 +37,11 @@ def help():
 
 
 if __name__=="__main__":
-    if len(sys.argv)!=5: help()
-    xRange      = range(int(sys.argv[1].split("-")[0]), int(sys.argv[1].split("-")[1])+1) if sys.argv[1].find("-")>0 else range(int(sys.argv[1]), int(sys.argv[1])+1)
-    yRange      = range(int(sys.argv[2].split("-")[0]), int(sys.argv[2].split("-")[1])+1) if sys.argv[2].find("-")>0 else range(int(sys.argv[2]), int(sys.argv[2])+1)
-    outputType  = sys.argv[3]
-    pathType    = sys.argv[4]
-    main(xRange,yRange,outputType,pathType)
+    if len(sys.argv)==5 or len(sys.argv)==4 and sys.argv[3]=="data": 
+        xRange      = range(int(sys.argv[1].split("-")[0]), int(sys.argv[1].split("-")[1])+1) if sys.argv[1].find("-")>0 else range(int(sys.argv[1]), int(sys.argv[1])+1)
+        yRange      = range(int(sys.argv[2].split("-")[0]), int(sys.argv[2].split("-")[1])+1) if sys.argv[2].find("-")>0 else range(int(sys.argv[2]), int(sys.argv[2])+1)
+        outputType  = sys.argv[3]
+        pathType    = sys.argv[4]
+        main(xRange,yRange,outputType,pathType)
+    else:
+        help()
