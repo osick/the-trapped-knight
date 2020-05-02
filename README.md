@@ -130,9 +130,9 @@ All the examples are generated using this lib.
   myPathAnimation.animate(outputType="animgif", color="white", speed=100, outDir="out", type="scatter")
   ```
 * We are done! 
-* The result is\ 
+<p align="center"> The result is 
 <img src="./samples/knightPath-1-2.anim_02.gif" alt="Animated Gif for 1-2 Knight" width="500" height="500">
-
+</p>
 
 ## The main file
   
