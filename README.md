@@ -1,6 +1,6 @@
 # The Trapped Knight Problem Solver
 
-Table of Contents
+## Table of Contents
 =================
 * [The Problem](#the-problem)
   * [Examples](#examples)
@@ -34,7 +34,7 @@ The trapped knight problem is the following:
   1. never go to a square were the knight has been before
   2. Go to the square with minimum weight. 
 
-  In the situation above starting at the **1** the next square i **14**. 
+  In the situation above starting at the **1** the next square is **14**. 
 
 This problem can be generalized to other types of knights, not only hopping in (1,2) steps on the board, but with arbitrary step patterns (x,y) (with x>0 and y>0). It is importantt to notice the problem can be simplified to the situtation where `gcd(x,y)==1`. In the case `gcd(x,y)==c>1` this can be simplified to the case `(x/c,y/c)` withput loss of  generality. 
 
@@ -48,20 +48,20 @@ Type of knight | Length | xDiam | yDiam | Density
 -------------- | ------ | ----- | ----- | -------
 (1,2)-knight   | 2016   | 55    |  56   | 0.65455
 (1,3)-knight   | 3723   | 92    |  91   | 0.44470
-(1,4)-knight   |  13103 | 125   |  125  | 0.83859
-(2,1)-knight   |  2016  | 55    |  56   | 0.65455
-(2,3)-knight   |  4634  | 81    |  81   | 0.70629
-(3,1)-knight   |  3723  | 92    |  91   | 0.44470
-(3,2)-knight   |  4634  | 81    |  81   | 0.70629
+(1,4)-knight   | 13103  | 125   |  125  | 0.83859
+(2,1)-knight   | 2016   | 55    |  56   | 0.65455
+(2,3)-knight   | 4634   | 81    |  81   | 0.70629
+(3,1)-knight   | 3723   | 92    |  91   | 0.44470
+(3,2)-knight   | 4634   | 81    |  81   | 0.70629
 
 The meaning of the values is
 
 * `Length` is path length
 * `xDiam` is the maximum diameter of the path in x-direction
-* `yDiam` is the maximum diameter of the path in x-direction
-* `Density` is the ratio `Length/(xDiam*yDiam)` which is always `<=1`
+* `yDiam` is the maximum diameter of the path in y-direction
+* `Density` is the ratio `Length/(xDiam*yDiam)` which is always `<=1`. The density expresses the degreaa of foldedness of the path.
 
-The density expresses the degreaa of foldedness of the path.
+Up to now no (x,y) knight is known with infinite path length
 
 ## Examples 
 
@@ -130,7 +130,8 @@ All the examples are generated using this lib.
   myPathAnimation.animate(outputType="animgif", color="white", speed=100, outDir="out", type="scatter")
   ```
 * We are done! 
-* The result is <img src="./samples/knightPath-1-2.anim_02.gif" alt="Animated Gif for 1-2 Knight" width="500" height="500">
+* The result is\ 
+<img src="./samples/knightPath-1-2.anim_02.gif" alt="Animated Gif for 1-2 Knight" width="500" height="500">
 
 
 ## The main file
