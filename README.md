@@ -42,7 +42,7 @@ Questions are now?
   1. How long is ths path? 
   2. Can it be infinite? 
 
-For a (1,2)-knight the path has length 2016, for other types of knight we have the following sample data (computed using thsi library):
+For a (1,2)-knight the path has length 2016, for other types of knight we have the following sample data (computed using this library):
 
 Type of knight | Length | xDiam | yDiam | Density
 -------------- | ------ | ----- | ----- | -------
@@ -72,13 +72,13 @@ Up to now no (x,y)-knight is known with infinite path length
 
 ## Examples 
 
-All the examples are generated using this lib.
+All examples are generated using this library (in fact using the main.py, see below).
 
 * An [MP4](./samples/knightPath-1-22.mp4) for the (1,22)-knight
 * A gif for the (1,2)-knight\
   ![knightPath-1-2.gif](./samples/knightPath-1-2.gif)
 * A HTML file for the [(2,5)-knight](./samples/knightPath-2-5.html)
-
+* more to come
 
 # The Python Library
 
@@ -148,6 +148,9 @@ All the examples are generated using this lib.
         or
         Python main.py <num>-<num> <num>-<num> [screen|mp4|avi|animgif|gif|html|data] [line|scatter]
   ```
+
+# Further Thoughts
+  tbd
 
 # References
   * The problem will be explaiend in detail at [Numberphile](https://www.youtube.com/watch?v=RGQe8waGJ4w)
