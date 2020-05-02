@@ -108,7 +108,7 @@ All examples are generated using this library (in fact using the main.py, see be
 
 ## Sample Usage 
 
-* A basic example may look like this:
+* A basic example script using this library may look like this:
 
   ```Python
   #!/usr/bin/env python3
@@ -127,8 +127,8 @@ All examples are generated using this library (in fact using the main.py, see be
   # Generate the spiral path of the Knight
   myKnightPathFinder.genHistory()
   # The genHitory() method has a rudimentary output of some data of the path.
-  # In this we have
-  # -> "Knight path of shape (1,2) , 2016 | 55  |  56  |   0.65455"
+  # In this case we will get the command line output 
+  # "Knight path of shape (1,2) , Length = 2016 , xDiam = 55 , yDiam = 56 , Density = 0.65455"
    
   # Define a new pathAnimation Class passing a knightPathFinder instance to it
   myPathAnimation=pathAnimation(myKnightPathFinder)
@@ -153,6 +153,6 @@ All examples are generated using this library (in fact using the main.py, see be
   tbd
 
 # References
-  * The problem will be explaiend in detail at [Numberphile](https://www.youtube.com/watch?v=RGQe8waGJ4w)
+  * The problem will be explained in detail at [Numberphile](https://www.youtube.com/watch?v=RGQe8waGJ4w)
   * On [OEIS](https://oeis.org/A323472) the length is computed for a large quantity of x,y-knights (aka x,y-leapers) 
 
