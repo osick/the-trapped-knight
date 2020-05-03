@@ -13,6 +13,7 @@
     * [Class pathAnimation](#class-pathanimation)
   * [Sample Usage](#sample-usage)
   * [The main file](#the-main-file)
+* [Licence](#licence)
 * [References](#references)
 
 ## The Problem
@@ -151,6 +152,10 @@ All examples are generated using this library (in fact using the main.py, see be
 
 # Further Thoughts
   tbd
+
+# Licence
+
+  [GPL v3.0](./LICENCE)
 
 # References
   * The problem will be explained in detail at [Numberphile](https://www.youtube.com/watch?v=RGQe8waGJ4w)
