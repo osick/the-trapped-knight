@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -
+__author__  = "Oliver Sick"
+__version__= "0.1.0"
+__date__= "03.06.2020"
 
 import sys
 from math import gcd
@@ -45,3 +48,4 @@ if __name__=="__main__":
         main(xRange,yRange,outputType,pathType)
     else:
         help()
+
