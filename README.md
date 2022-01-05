@@ -21,7 +21,8 @@
 The trapped knight problem is the following:
   Think of an infinite chess board where the squares are labeled according to the following pattern:
   ![trapped knightspiral](trapped-knight_01.png)
-  the squares are numbered along a spiral starting at one and circling around it until infnity.
+
+  The squares are numbered along a spiral starting at one and circling around it until infnity.
 
   Next put a knight on the **1** square of this spiral chess board and ask for the path of the knight according to the following two rules
   1. never go to a square were the knight has been before
