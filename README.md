@@ -20,22 +20,14 @@
 
 The trapped knight problem is the following:
   Think of an infinite chess board where the squares are labeled according to the following pattern:
-  <table>
-    <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-    <tr><td>...</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td><td>25</td><td>...</td></tr>
-    <tr><td>...</td><td>19</td><td>6</td><td>7</td><td>8</td><td>9</td><td>26</td><td>...</td></tr>
-    <tr><td>...</td><td>18</td><td>5</td><td>0</td><td>`1`</td><td>10</td><td>27</td><td>...</td></tr>
-    <tr><td>...</td><td>17</td><td>4</td><td>3</td><td>2</td><td>11</td><td>28</td><td>...</td></tr>
-    <tr><td>...</td><td>16</td><td>15</td><td>`14`</td><td>13</td><td>12</td><td>29</td><td>...</td></tr>
-    <tr><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>
-  </table>
+  ![trapped knightspiral](trapped-knight_01.png)
   the squares are numbered along a spiral starting at one and circling around it until infnity.
 
   Next put a knight on the **1** square of this spiral chess board and ask for the path of the knight according to the following two rules
   1. never go to a square were the knight has been before
-  2. Go to the square with minimum weight. 
+  2. Go to the square with minimum integer label. 
 
-  In the situation above starting at the **1** the next square is **14**. 
+  In the situation above starting at the **1** the next square is **10**. 
 
 This problem can be generalized to other types of knights, not only hopping in (1,2) steps on the board, but with arbitrary step patterns (x,y) (with x>0 and y>0). It is importantt to notice the problem can be simplified to the situtation where `gcd(x,y)==1`. In the case `gcd(x,y)==c>1` this can be simplified to the case `(x/c,y/c)` withput loss of  generality. Of course we also have the same resulty for the (y,x)-knight compared to the (x,y)-knight.
 
